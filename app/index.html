@@ -34,10 +34,38 @@
 <body>
     <div class="container">
         <h1>🌟 MoroccoTour AI</h1>
+        <h2>Welcome, Dahbiadam!</h2>
         <div id="statusBox" class="status">
             Checking status...
         </div>
     </div>
 
     <script>
-        async
+        async function checkStatus() {
+            try {
+                const response = await fetch('status.json');
+                const data = await response.json();
+                
+                document.getElementById('statusBox').innerHTML = `
+                    <div class="online">
+                        ✅ API is Online!<br>
+                        Time: ${data.timestamp}<br>
+                        User: ${data.user}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('statusBox').innerHTML = `
+                    <div class="offline">
+                        ❌ API is Offline<br>
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Check status every 30 seconds
+        checkStatus();
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>
