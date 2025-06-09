@@ -10,6 +10,6 @@ app = FastAPI(
 async def get_status():
     return {
         "status": "online",
-        "timestamp": "2025-06-09 13:50:35",
+        "timestamp": "2025-06-09 13:54:31",
         "user": "Dahbiadam"
     }
