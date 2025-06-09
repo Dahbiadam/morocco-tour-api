@@ -25,12 +25,12 @@ jobs:
       - name: Create API Documentation
         run: |
           mkdir -p public
-          cp app/index.html public/
-          echo '{
-            "status": "online",
-            "timestamp": "2025-06-09 13:48:26",
-            "user": "Dahbiadam"
-          }' > public/status.json
+          cp app/index.html public/ || true
+          echo "{
+            \"status\": \"online\",
+            \"timestamp\": \"2025-06-09 13:52:57\",
+            \"user\": \"Dahbiadam\"
+          }" > public/status.json
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
