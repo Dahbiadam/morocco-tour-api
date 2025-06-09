@@ -29,53 +29,15 @@
             background: #f8d7da;
             color: #721c24;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: #1a365d;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🌟 MoroccoTour AI</h1>
-            <p>Your AI Travel Assistant</p>
-        </div>
-        
+        <h1>🌟 MoroccoTour AI</h1>
         <div id="statusBox" class="status">
             Checking status...
         </div>
     </div>
 
     <script>
-        async function checkStatus() {
-            try {
-                const response = await fetch('/status');
-                const data = await response.json();
-                
-                document.getElementById('statusBox').innerHTML = `
-                    <div class="online">
-                        ✅ API is Online!<br>
-                        Time: ${data.timestamp}<br>
-                        User: ${data.user}
-                    </div>
-                `;
-            } catch (error) {
-                document.getElementById('statusBox').innerHTML = `
-                    <div class="offline">
-                        ❌ API is Offline<br>
-                        Error: ${error.message}
-                    </div>
-                `;
-            }
-        }
-
-        // Check status every 30 seconds
-        checkStatus();
-        setInterval(checkStatus, 30000);
-    </script>
-</body>
-</html>
+        async
