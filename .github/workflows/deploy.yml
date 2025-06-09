@@ -5,36 +5,83 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install uvicorn
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
 
       - name: Create API Documentation
         run: |
-          mkdir -p public
-          cp app/index.html public/ || true
+          mkdir -p _site
           echo "{
             \"status\": \"online\",
-            \"timestamp\": \"2025-06-09 13:52:57\",
+            \"timestamp\": \"2025-06-09 13:54:31\",
             \"user\": \"Dahbiadam\"
-          }" > public/status.json
+          }" > _site/status.json
+          cat > _site/index.html << 'EOL'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>MoroccoTour AI</title>
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 40px; background: #f0f2f5; }
+                  .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                  .status { padding: 15px; margin: 15px 0; border-radius: 5px; }
+                  .online { background: #d4edda; color: #155724; }
+                  .offline { background: #f8d7da; color: #721c24; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>🌟 MoroccoTour AI</h1>
+                  <h2>Welcome, Dahbiadam!</h2>
+                  <div id="statusBox" class="status">
+                      Checking status...
+                  </div>
+              </div>
+              <script>
+                  async function checkStatus() {
+                      try {
+                          const response = await fetch('status.json');
+                          const data = await response.json();
+                          document.getElementById('statusBox').innerHTML = `
+                              <div class="online">
+                                  ✅ API is Online!<br>
+                                  Time: ${data.timestamp}<br>
+                                  User: ${data.user}
+                              </div>
+                          `;
+                      } catch (error) {
+                          document.getElementById('statusBox').innerHTML = `
+                              <div class="offline">
+                                  ❌ API is Offline<br>
+                                  Error: ${error.message}
+                              </div>
+                          `;
+                      }
+                  }
+                  checkStatus();
+                  setInterval(checkStatus, 30000);
+              </script>
+          </body>
+          </html>
+          EOL
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          force_orphan: true
+        id: deployment
+        uses: actions/deploy-pages@v2
